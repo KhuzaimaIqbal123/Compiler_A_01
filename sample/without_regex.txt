@@ -1,0 +1,4 @@
+fn string خوش_آمدید() {
+    string msg = "Welcome 😊\nخوش آمدید!";
+    return msg;
+}

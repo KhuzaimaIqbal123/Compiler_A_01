@@ -52,7 +52,7 @@ public:
                 }
             }
 
-            // --- Strings ---
+            // --- Strings with Unicode / Emojis ---
             if (c == '"') {
                 string strlit = "";
                 tokens.push_back(Token(TokenType::T_QUOTES, "\""));
@@ -63,7 +63,7 @@ public:
                         strlit += source[pos + 1];
                         pos += 2;
                     } else {
-                        strlit += source[pos++];
+                        strlit += source[pos++]; // Unicode included
                     }
                 }
                 if (pos < source.size() && source[pos] == '"') pos++;
@@ -85,17 +85,18 @@ public:
                 continue;
             }
 
-            // --- Identifiers & Keywords ---
-            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+            // --- Identifiers & Keywords with Unicode / Emojis ---
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || (unsigned char)c >= 128) {
                 string word;
-                while (pos < source.size() &&
-                       ((source[pos] >= 'a' && source[pos] <= 'z') ||
-                        (source[pos] >= 'A' && source[pos] <= 'Z') ||
-                        (source[pos] >= '0' && source[pos] <= '9') ||
-                        source[pos] == '_')) {
-                    word += source[pos++];
+                while (pos < source.size()) {
+                    unsigned char cc = source[pos];
+                    if ((cc >= 'a' && cc <= 'z') || (cc >= 'A' && cc <= 'Z') || 
+                        (cc >= '0' && cc <= '9') || cc == '_' || cc >= 128) {
+                        word += source[pos++];
+                    } else break;
                 }
 
+                // Keyword check
                 if (word == "fn") tokens.push_back(Token(TokenType::T_FUNCTION));
                 else if (word == "int") tokens.push_back(Token(TokenType::T_INT));
                 else if (word == "float") tokens.push_back(Token(TokenType::T_FLOAT));
