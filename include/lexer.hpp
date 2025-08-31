@@ -22,30 +22,31 @@ public:
     vector<Token> tokenize() {
         vector<Token> tokens;
 
-        regex id("[a-zA-Z_][a-zA-Z0-9_]*");
-        regex num("[0-9]+(\\.[0-9]+)?");
-        regex str("\"([^\"\\\\]|\\\\.)*\"");
-        regex ws("\\s+");
-        regex comment("//.*|/\\*[\\s\\S]*?\\*/");
+        // Unicode-aware identifier regex
+        regex id(R"([A-Za-z_\p{L}][A-Za-z0-9_\p{L}]*)", regex::optimize | regex::ECMAScript);
+        regex num(R"([0-9]+(\.[0-9]+)?)");
+        regex str(R"("([^"\\]|\\.)*")");
+        regex ws(R"(\s+)");
+        regex comment(R"(//.*|/\*[\s\S]*?\*/)");
 
         while (pos < source.size()) {
             string rem = source.substr(pos);
             smatch m;
 
-            // Skip whitespace
+            // --- Skip whitespace ---
             if (regex_search(rem, m, ws) && m.position() == 0) {
                 pos += m.length();
                 continue;
             }
 
-            // Comments
+            // --- Comments ---
             if (regex_search(rem, m, comment) && m.position() == 0) {
                 tokens.push_back(Token(TokenType::T_COMMENT, m.str()));
                 pos += m.length();
                 continue;
             }
 
-            // String literal
+            // --- String literals ---
             if (regex_search(rem, m, str) && m.position() == 0) {
                 string val = m.str();
                 tokens.push_back(Token(TokenType::T_QUOTES, "\""));
@@ -55,7 +56,7 @@ public:
                 continue;
             }
 
-            // Numbers
+            // --- Numbers ---
             if (regex_search(rem, m, num) && m.position() == 0) {
                 string val = m.str();
                 if (val.find('.') != string::npos)
@@ -66,9 +67,17 @@ public:
                 continue;
             }
 
-            // Identifiers / Keywords
+            // --- Identifiers / Keywords ---
             if (regex_search(rem, m, id) && m.position() == 0) {
                 string val = m.str();
+
+                // --- Check invalid identifier (starts with digit) ---
+                if (isdigit(val[0])) {
+                    tokens.push_back(Token(TokenType::T_ERROR, val));
+                    pos += m.length();
+                    continue;
+                }
+
                 if (val == "fn") tokens.push_back(Token(TokenType::T_FUNCTION));
                 else if (val == "int") tokens.push_back(Token(TokenType::T_INT));
                 else if (val == "float") tokens.push_back(Token(TokenType::T_FLOAT));
@@ -86,7 +95,7 @@ public:
                 continue;
             }
 
-            // Operators and symbols
+            // --- Operators & Symbols ---
             char c = rem[0];
             switch (c) {
                 case '(': tokens.push_back(Token(TokenType::T_PARENL)); break;
