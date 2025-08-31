@@ -61,4 +61,15 @@ public:
                 tokens.push_back(Token(TokenType::T_QUOTES, "\""));
                 continue;
             }
-    
+    // Numbers 
+            if (isdigit(c)) {
+                string num;
+                bool isFloat = false;
+                while (pos < source.size() && (isdigit(source[pos]) || source[pos] == '.')) {
+                    if (source[pos] == '.') isFloat = true;
+                    num += source[pos++];
+                }
+                if (isFloat) tokens.push_back(Token(TokenType::T_FLOATLIT, num));
+                else tokens.push_back(Token(TokenType::T_INTLIT, num));
+                continue;
+            }
