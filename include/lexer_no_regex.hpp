@@ -46,5 +46,19 @@ public:
                     continue;
                 }
             }
-
+     // Strings 
+            if (c == '"') {
+                string strlit = "";
+                tokens.push_back(Token(TokenType::T_QUOTES, "\""));
+                pos++;
+                while (pos < source.size() && source[pos] != '"') {
+                    if (source[pos] == '\\' && pos + 1 < source.size()) {
+                        strlit += source[pos]; strlit += source[pos+1]; pos += 2;
+                    } else strlit += source[pos++];
+                }
+                if (pos < source.size() && source[pos] == '"') pos++;
+                tokens.push_back(Token(TokenType::T_STRINGLIT, strlit));
+                tokens.push_back(Token(TokenType::T_QUOTES, "\""));
+                continue;
+            }
     
