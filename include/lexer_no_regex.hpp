@@ -104,3 +104,51 @@ if (isalpha(c) || c == '_' || (unsigned char)c >= 128) {
                 else tokens.push_back(Token(TokenType::T_IDENTIFIER, word));
                 continue;
             }
+ // --- Operators & Symbols ---
+            switch (c) {
+                case '(': tokens.push_back(Token(TokenType::T_PARENL)); break;
+                case ')': tokens.push_back(Token(TokenType::T_PARENR)); break;
+                case '{': tokens.push_back(Token(TokenType::T_BRACEL)); break;
+                case '}': tokens.push_back(Token(TokenType::T_BRACER)); break;
+                case '[': tokens.push_back(Token(TokenType::T_BRACKETL)); break;
+                case ']': tokens.push_back(Token(TokenType::T_BRACKETR)); break;
+                case ',': tokens.push_back(Token(TokenType::T_COMMA)); break;
+                case ';': tokens.push_back(Token(TokenType::T_SEMICOLON)); break;
+                case '+': tokens.push_back(Token(TokenType::T_PLUS)); break;
+                case '-': tokens.push_back(Token(TokenType::T_MINUS)); break;
+                case '*': tokens.push_back(Token(TokenType::T_MUL)); break;
+                case '/': tokens.push_back(Token(TokenType::T_DIV)); break;
+                case '%': tokens.push_back(Token(TokenType::T_MOD)); break;
+                case '=':
+                    if (pos + 1 < source.size() && source[pos+1]=='=') { tokens.push_back(Token(TokenType::T_EQUALSOP)); pos++; }
+                    else tokens.push_back(Token(TokenType::T_ASSIGNOP));
+                    break;
+                case '!':
+                    if (pos + 1 < source.size() && source[pos+1]=='=') { tokens.push_back(Token(TokenType::T_NOTEQ)); pos++; }
+                    else tokens.push_back(Token(TokenType::T_ERROR, "!"));
+                    break;
+                case '<':
+                    if (pos + 1 < source.size() && source[pos+1]=='=') { tokens.push_back(Token(TokenType::T_LTE)); pos++; }
+                    else tokens.push_back(Token(TokenType::T_LT));
+                    break;
+                case '>':
+                    if (pos + 1 < source.size() && source[pos+1]=='=') { tokens.push_back(Token(TokenType::T_GTE)); pos++; }
+                    else tokens.push_back(Token(TokenType::T_GT));
+                    break;
+                case '&':
+                    if (pos + 1 < source.size() && source[pos+1]=='&') { tokens.push_back(Token(TokenType::T_AND)); pos++; }
+                    else tokens.push_back(Token(TokenType::T_ERROR, "&"));
+                    break;
+                case '|':
+                    if (pos + 1 < source.size() && source[pos+1]=='|') { tokens.push_back(Token(TokenType::T_OR)); pos++; }
+                    else tokens.push_back(Token(TokenType::T_ERROR, "|"));
+                    break;
+                default: tokens.push_back(Token(TokenType::T_ERROR, string(1,c)));
+            }
+            pos++;
+        }
+
+        tokens.push_back(Token(TokenType::T_EOF));
+        return tokens;
+    }
+};
