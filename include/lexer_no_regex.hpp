@@ -73,3 +73,18 @@ public:
                 else tokens.push_back(Token(TokenType::T_INTLIT, num));
                 continue;
             }
+if (isalpha(c) || c == '_' || (unsigned char)c >= 128) {
+                string word;
+                if (isdigit(c)) { // Invalid identifier
+                    string err;
+                    while (pos < source.size() && (isalnum(source[pos]) || source[pos] == '_' || (unsigned char)source[pos]>=128))
+                        err += source[pos++];
+                    tokens.push_back(Token(TokenType::T_ERROR, err));
+                    continue;
+                }
+
+                while (pos < source.size()) {
+                    unsigned char cc = source[pos];
+                    if (isalnum(cc) || cc == '_' || cc >= 128) word += source[pos++];
+                    else break;
+                }
