@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <iostream>
+using namespace std;
 
 enum class TokenType {
-    
     // Keywords
     T_FUNCTION, T_INT, T_FLOAT, T_STRING, T_BOOL, T_RETURN,
     T_IF, T_ELSE, T_FOR, T_WHILE, T_TRUE, T_FALSE,
@@ -31,23 +31,20 @@ enum class TokenType {
 
 struct Token {
     TokenType type;
-    std::string value;
+    string value;
 
-    Token(TokenType t, const std::string& v = "") : type(t), value(v) {}
+    Token(TokenType t, const string& v = "") : type(t), value(v) {}
 
     void print() const {
-        switch (type) {
-            case TokenType::T_IDENTIFIER: std::cout << "T_IDENTIFIER(\"" << value << "\")"; break;
-            case TokenType::T_INTLIT: std::cout << "T_INTLIT(" << value << ")"; break;
-            case TokenType::T_FLOATLIT: std::cout << "T_FLOATLIT(" << value << ")"; break;
-            case TokenType::T_STRINGLIT: std::cout << "T_STRINGLIT(\"" << value << "\")"; break;
-            case TokenType::T_ERROR: std::cout << "T_ERROR(" << value << ")"; break;
-            default:
-                std::cout << tokenName(type);
-        }
+        if (type == TokenType::T_IDENTIFIER) cout << "T_IDENTIFIER(\"" << value << "\")";
+        else if (type == TokenType::T_INTLIT) cout << "T_INTLIT(" << value << ")";
+        else if (type == TokenType::T_FLOATLIT) cout << "T_FLOATLIT(" << value << ")";
+        else if (type == TokenType::T_STRINGLIT) cout << "T_STRINGLIT(\"" << value << "\")";
+        else if (type == TokenType::T_ERROR) cout << "T_ERROR(" << value << ")";
+        else cout << tokenName(type);
     }
 
-    static std::string tokenName(TokenType t) {
+    static string tokenName(TokenType t) {
         switch (t) {
             case TokenType::T_FUNCTION: return "T_FUNCTION";
             case TokenType::T_INT: return "T_INT";
