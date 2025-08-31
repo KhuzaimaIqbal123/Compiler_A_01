@@ -22,7 +22,6 @@ public:
     vector<Token> tokenize() {
         vector<Token> tokens;
 
-        // Unicode-aware identifier regex
         regex id(R"([A-Za-z_\p{L}][A-Za-z0-9_\p{L}]*)", regex::optimize | regex::ECMAScript);
         regex num(R"([0-9]+(\.[0-9]+)?)");
         regex str(R"("([^"\\]|\\.)*")");
@@ -67,36 +66,10 @@ public:
                 continue;
             }
 
-            // --- Identifiers / Keywords ---
-            if (regex_search(rem, m, id) && m.position() == 0) {
-                string val = m.str();
-
-                // --- Check invalid identifier (starts with digit) ---
-                if (isdigit(val[0])) {
-                    tokens.push_back(Token(TokenType::T_ERROR, val));
-                    pos += m.length();
-                    continue;
-                }
-
-                if (val == "fn") tokens.push_back(Token(TokenType::T_FUNCTION));
-                else if (val == "int") tokens.push_back(Token(TokenType::T_INT));
-                else if (val == "float") tokens.push_back(Token(TokenType::T_FLOAT));
-                else if (val == "string") tokens.push_back(Token(TokenType::T_STRING));
-                else if (val == "bool") tokens.push_back(Token(TokenType::T_BOOL));
-                else if (val == "return") tokens.push_back(Token(TokenType::T_RETURN));
-                else if (val == "if") tokens.push_back(Token(TokenType::T_IF));
-                else if (val == "else") tokens.push_back(Token(TokenType::T_ELSE));
-                else if (val == "for") tokens.push_back(Token(TokenType::T_FOR));
-                else if (val == "while") tokens.push_back(Token(TokenType::T_WHILE));
-                else if (val == "true") tokens.push_back(Token(TokenType::T_TRUE));
-                else if (val == "false") tokens.push_back(Token(TokenType::T_FALSE));
-                else tokens.push_back(Token(TokenType::T_IDENTIFIER, val));
-                pos += m.length();
-                continue;
-            }
-
-            // --- Operators & Symbols ---
+            // --- Operators & Symbols (CHECK FIRST) ---
             char c = rem[0];
+            bool matched = true;
+
             switch (c) {
                 case '(': tokens.push_back(Token(TokenType::T_PARENL)); break;
                 case ')': tokens.push_back(Token(TokenType::T_PARENR)); break;
@@ -136,8 +109,41 @@ public:
                     else tokens.push_back(Token(TokenType::T_ERROR, "|"));
                     break;
                 default:
-                    tokens.push_back(Token(TokenType::T_ERROR, string(1, c)));
+                    matched = false;
             }
+
+            if (matched) { pos++; continue; }
+
+            // --- Identifiers / Keywords ---
+            if (regex_search(rem, m, id) && m.position() == 0) {
+                string val = m.str();
+
+                if (isdigit(val[0])) { // Invalid identifier
+                    tokens.push_back(Token(TokenType::T_ERROR, val));
+                    pos += m.length();
+                    continue;
+                }
+
+                if (val == "fn") tokens.push_back(Token(TokenType::T_FUNCTION));
+                else if (val == "int") tokens.push_back(Token(TokenType::T_INT));
+                else if (val == "float") tokens.push_back(Token(TokenType::T_FLOAT));
+                else if (val == "string") tokens.push_back(Token(TokenType::T_STRING));
+                else if (val == "bool") tokens.push_back(Token(TokenType::T_BOOL));
+                else if (val == "return") tokens.push_back(Token(TokenType::T_RETURN));
+                else if (val == "if") tokens.push_back(Token(TokenType::T_IF));
+                else if (val == "else") tokens.push_back(Token(TokenType::T_ELSE));
+                else if (val == "for") tokens.push_back(Token(TokenType::T_FOR));
+                else if (val == "while") tokens.push_back(Token(TokenType::T_WHILE));
+                else if (val == "true") tokens.push_back(Token(TokenType::T_TRUE));
+                else if (val == "false") tokens.push_back(Token(TokenType::T_FALSE));
+                else tokens.push_back(Token(TokenType::T_IDENTIFIER, val));
+
+                pos += m.length();
+                continue;
+            }
+
+            // --- Unknown character ---
+            tokens.push_back(Token(TokenType::T_ERROR, string(1, c)));
             pos++;
         }
 

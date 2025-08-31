@@ -1,12 +1,6 @@
-// This is a single-line comment
-/* This is a 
-   multi-line comment */
-fn myFunction(int x, float y) {
-    string greeting = "Hello, 🌍!";
-    bool flag = true;
-    int invalid1 = 123abc; // invalid identifier
-    float pi = 3.14159;
-    if (flag && !false) {
-        return greeting;
+fn string greet(string name) {
+    string message = "Hello, 👋 " + name;
+    if (name != "") {
+        return message;
     }
 }
