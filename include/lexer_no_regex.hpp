@@ -88,3 +88,19 @@ if (isalpha(c) || c == '_' || (unsigned char)c >= 128) {
                     if (isalnum(cc) || cc == '_' || cc >= 128) word += source[pos++];
                     else break;
                 }
+    // --- Keyword check ---
+                if (word == "fn") tokens.push_back(Token(TokenType::T_FUNCTION));
+                else if (word == "int") tokens.push_back(Token(TokenType::T_INT));
+                else if (word == "float") tokens.push_back(Token(TokenType::T_FLOAT));
+                else if (word == "string") tokens.push_back(Token(TokenType::T_STRING));
+                else if (word == "bool") tokens.push_back(Token(TokenType::T_BOOL));
+                else if (word == "return") tokens.push_back(Token(TokenType::T_RETURN));
+                else if (word == "if") tokens.push_back(Token(TokenType::T_IF));
+                else if (word == "else") tokens.push_back(Token(TokenType::T_ELSE));
+                else if (word == "for") tokens.push_back(Token(TokenType::T_FOR));
+                else if (word == "while") tokens.push_back(Token(TokenType::T_WHILE));
+                else if (word == "true") tokens.push_back(Token(TokenType::T_TRUE));
+                else if (word == "false") tokens.push_back(Token(TokenType::T_FALSE));
+                else tokens.push_back(Token(TokenType::T_IDENTIFIER, word));
+                continue;
+            }
