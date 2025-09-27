@@ -4,7 +4,7 @@ using namespace std;
 
 int main() {
 
-    LexerNoRegex lexer2("../sample/without_regex.txt"); 
+    LexerNoRegex lexer2("sample/without_regex.txt"); 
 
 
     vector<Token> l2tokens = lexer2.tokenize();

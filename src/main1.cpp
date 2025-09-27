@@ -4,7 +4,7 @@ using namespace std;
 
 int main() {
 
-    Lexer lexer1("../sample/program.txt");
+    Lexer lexer1("sample/program.txt");
 
 
     vector<Token> l1tokens = lexer1.tokenize();
