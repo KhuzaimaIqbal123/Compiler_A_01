@@ -52,6 +52,20 @@ class BinaryExpr : public Expr {
         }
 };
 
+class Stmt : public ASTNode {};
 
-    
+class VarDecl : public Stmt {
+    string type, name;
+    unique_ptr<Expr> init;
+public:
+    VarDecl(const string& t, const string& n, unique_ptr<Expr> i = nullptr)
+        : type(t), name(n), init(move(i)) {}
+    void print(int indent = 0) const override {
+        printIndent(indent);
+        cout << "VarDecl: " << type << " " << name << "\n";
+        if (init) init->print(indent + 1);
+    }
+};
+
+
     
