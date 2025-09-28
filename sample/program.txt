@@ -1,6 +1,5 @@
-fn string greet(string name) {
-    string message = "Hello, 👋 " + name;
-    if (name != "") {
-        return message;
-    }
+function int add(int a, int b) {
+    int result = a + b;
+    return result;
 }
+
