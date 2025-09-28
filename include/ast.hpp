@@ -15,3 +15,18 @@ class ASTNode {
             for (int i = 0; i < indent; i++) cout << "  ";
         }
     };
+
+class Expr : public ASTNode {};
+
+class LiteralExpr : public Expr {
+    string value;
+    public:
+        LiteralExpr(const string& val) : value(val) {}
+        void print(int indent = 0) const override {
+            printIndent(indent);
+            cout << "Literal: " << value << "\n";
+        }
+    };
+
+
+    
