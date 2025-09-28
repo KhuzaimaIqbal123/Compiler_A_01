@@ -28,5 +28,15 @@ class LiteralExpr : public Expr {
         }
     };
 
+class IdentifierExpr : public Expr {
+    string name;
+    public:
+        IdentifierExpr(const string& n) : name(n) {}
+        void print(int indent = 0) const override {
+            printIndent(indent);
+            cout << "Identifier: " << name << "\n";
+        }
+    };
+    
 
     
