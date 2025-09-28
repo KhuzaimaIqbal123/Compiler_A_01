@@ -79,4 +79,29 @@ public:
     }
 };
 
-    
+class FunctionDecl : public Stmt {
+    string returnType, name;
+    vector<pair<string, string>> params;
+    vector<unique_ptr<Stmt>> body;
+public:
+    FunctionDecl(const string& rt, const string& n,
+                 vector<pair<string, string>> p,
+                 vector<unique_ptr<Stmt>> b)
+        : returnType(rt), name(n), params(move(p)), body(move(b)) {}
+    void print(int indent = 0) const override {
+        printIndent(indent);
+        cout << "FunctionDecl: " << returnType << " " << name << "\n";
+        printIndent(indent + 1);
+        cout << "Parameters:\n";
+        for (auto& param : params) {
+            printIndent(indent + 2);
+            cout << param.first << " " << param.second << "\n";
+        }
+        printIndent(indent + 1);
+        cout << "Body:\n";
+        for (auto& stmt : body) {
+            stmt->print(indent + 2);
+        }
+    }
+};
+
