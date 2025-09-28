@@ -14,7 +14,7 @@ class ASTNode {
         void printIndent(int indent) const {
             for (int i = 0; i < indent; i++) cout << "  ";
         }
-    };
+};
 
 class Expr : public ASTNode {};
 
@@ -26,7 +26,7 @@ class LiteralExpr : public Expr {
             printIndent(indent);
             cout << "Literal: " << value << "\n";
         }
-    };
+};
 
 class IdentifierExpr : public Expr {
     string name;
@@ -36,7 +36,22 @@ class IdentifierExpr : public Expr {
             printIndent(indent);
             cout << "Identifier: " << name << "\n";
         }
-    };
+};
     
+class BinaryExpr : public Expr {
+    string op;
+    unique_ptr<Expr> left, right;
+    public:
+        BinaryExpr(const string& oper, unique_ptr<Expr> l, unique_ptr<Expr> r)
+            : op(oper), left(move(l)), right(move(r)) {}
+        void print(int indent = 0) const override {
+            printIndent(indent);
+            cout << "BinaryExpr: " << op << "\n";
+            left->print(indent + 1);
+            right->print(indent + 1);
+        }
+};
 
+
+    
     
