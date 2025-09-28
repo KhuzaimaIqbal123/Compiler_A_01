@@ -105,3 +105,15 @@ public:
     }
 };
 
+class Program : public ASTNode {
+    vector<unique_ptr<Stmt>> statements;
+public:
+    Program(vector<unique_ptr<Stmt>> stmts) : statements(move(stmts)) {}
+    void print(int indent = 0) const override {
+        printIndent(indent);
+        cout << "Program\n";
+        for (auto& stmt : statements) {
+            stmt->print(indent + 1);
+        }
+    }
+};
