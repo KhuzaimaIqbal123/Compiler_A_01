@@ -73,28 +73,3 @@ unique_ptr<ReturnStmt> Parser::parseReturnStmt() {
     expect(TokenType::T_SEMICOLON, ";");
     return make_unique<ReturnStmt>(move(expr));
 }
-
-unique_ptr<Expr> Parser::parseExpression() {
-    auto left = parsePrimary();
-
-    while (peek().type == TokenType::T_PLUS ||
-           peek().type == TokenType::T_MINUS ||
-           peek().type == TokenType::T_MUL ||
-           peek().type == TokenType::T_DIV) {
-        string op = peek().value;
-        get();
-        auto right = parsePrimary();
-        left = make_unique<BinaryExpr>(op, move(left), move(right));
-    }
-
-    return left;
-}
-
-unique_ptr<Expr> Parser::parsePrimary() {
-    Token t = get();
-    if (t.type == TokenType::T_INTLIT || t.type == TokenType::T_FLOATLIT || t.type == TokenType::T_STRINGLIT)
-        return make_unique<LiteralExpr>(t.value);
-    if (t.type == TokenType::T_IDENTIFIER)
-        return make_unique<IdentifierExpr>(t.value);
-    throw runtime_error("Unexpected token in expression: " + t.value);
-}
