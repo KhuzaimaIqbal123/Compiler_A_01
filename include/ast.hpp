@@ -68,4 +68,15 @@ public:
 };
 
 
+class ReturnStmt : public Stmt {
+    unique_ptr<Expr> value;
+public:
+    ReturnStmt(unique_ptr<Expr> v) : value(move(v)) {}
+    void print(int indent = 0) const override {
+        printIndent(indent);
+        cout << "ReturnStmt\n";
+        if (value) value->print(indent + 1);
+    }
+};
+
     
