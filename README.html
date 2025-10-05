@@ -139,6 +139,35 @@ T_IF, T_PARENL, T_IDENTIFIER("name"), T_NOTEQ, T_QUOTES, T_STRINGLIT(""), T_QUOT
 T_PARENR, T_BRACEL, T_RETURN, T_IDENTIFIER("message"), T_SEMICOLON, T_BRACER, T_BRACER, T_EOF
       </pre>
     </section>
+    <h3>3 Parser (AST Generator)</h3>
+    <p>After your lexer is working, you can now compile and run the parser to build an Abstract Syntax Tree (AST).</p>
+
+    <p>Compile both <code>parser.cpp</code> and <code>main_parser.cpp</code> together (from project root):</p>
+    <pre>
+g++ -std=c++17 src/main_parser.cpp src/parser.cpp -Iinclude -o main_parser
+    </pre>
+
+    <p>Run the parser (PowerShell):</p>
+    <pre>
+.\main_parser.exe
+    </pre>
+
+    <p>Or on Command Prompt (cmd.exe):</p>
+    <pre>
+main_parser.exe
+    </pre>
+
+    <h4>Input / Output</h4>
+    <ul>
+      <li>The parser reads the same token stream or source file used in the lexer phase (e.g. <code>sample/program.txt</code>).</li>
+      <li>It constructs and prints the <strong>Abstract Syntax Tree (AST)</strong> structure to the console.</li>
+      <li>If the input program has syntax errors, it will print a <code>ParseError</code> such as <code>UnexpectedToken</code> or <code>ExpectedIdentifier</code>.</li>
+    </ul>
+
+    <div class="note">
+      ⚙️ <b>Tip:</b> Ensure <code>ast.hpp</code>, <code>parser.hpp</code>, and <code>lexer.hpp</code> are inside your <code>include/</code> folder.
+      The parser depends on both the lexer tokens and AST definitions.
+    </div>
 
    
 
