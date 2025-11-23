@@ -7,8 +7,6 @@ using namespace std;
 int main() {
     
     Lexer lexer("sample/program.txt");
-
-
     
     vector<Token> tokens = lexer.tokenize();
 
