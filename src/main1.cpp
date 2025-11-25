@@ -1,22 +1,18 @@
-#include "../include/lexer.hpp"
-#include <iostream>
-using namespace std;
+#include "../include/parser.h"
+#include "../include/ir.h"
+
+using std::cout;
+using std::endl;
 
 int main() {
-
-    Lexer lexer1("sample/program.txt");
-
-
-    vector<Token> l1tokens = lexer1.tokenize();
-
-   cout<<endl;
-   cout<<"LEXER with REGEX: "<<endl<<endl;    
-   for (int i = 0; i < l1tokens.size(); i++) {
-    l1tokens[i].print();
-    cout << ", ";
+    if (program) {
+        cout << "Generating IR..." << endl;
+        IRGenerator irGen;
+        irGen.generate(program.get());
+        
+        cout << "--- Intermediate Representation (TAC) ---" << endl;
+        irGen.printInstructions();
     }
-
-    cout << endl;
 
     return 0;
 }
